@@ -1,5 +1,6 @@
 package org.asidorkin.inventory.controller;
 
+import lombok.SneakyThrows;
 import org.asidorkin.inventory.dto.AvailabilityDTO;
 import org.asidorkin.inventory.dto.ListOfIDsDTO;
 import org.asidorkin.inventory.repository.AvailabilityStorage;
@@ -23,9 +24,11 @@ public class Controller {
 //
 //    }
 
+    @SneakyThrows
     @RequestMapping(method = RequestMethod.POST)
     public AvailabilityDTO getAvailability(@RequestBody ListOfIDsDTO values)
     {
+        Thread.sleep(500);
         return new AvailabilityDTO(storage.getAvailability(values.getListOfIDs()));
     }
 

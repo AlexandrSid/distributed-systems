@@ -11,25 +11,26 @@ import org.asidorkin.product.model.Item;
 import org.asidorkin.product.utils.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.reactive.function.client.WebClient;
-import reactor.core.publisher.Mono;
+import org.springframework.web.client.RestTemplate;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @RestController
 public class ProductController {
 
     @Autowired
-    WebClient.Builder webClientBuilder;
+    RestTemplate restTemplate;
 
     @Value("${filter.zeros}")
     boolean filterZeros;
@@ -56,7 +57,7 @@ public class ProductController {
 //    @HystrixCommand(fallbackMethod = "getFallback")
     public ItemAvailabilityDTO availableBySku(@PathVariable String sku) {
 
-        ItemsTransferDTO requestedByIdItem = getItemsFromCatalog("http://catalog-service/sku/" + sku);
+        ItemsTransferDTO requestedByIdItem = getItemsFromCatalog("http://localhost:8081/sku/" + sku);
 
         List<String> iDs = requestedByIdItem.getItems().stream().map(Item::getUniqId).collect(Collectors.toList());
 
@@ -95,26 +96,22 @@ public class ProductController {
     }
 
 
-    private ItemsTransferDTO getItemsFromCatalog(String uri) throws ExecutionException, InterruptedException {
-        return webClientBuilder.build()
-                .get()
-                .uri(uri)
-                .retrieve()
-                .bodyToMono(ItemsTransferDTO.class)
-                .toFuture()
-                .get();
+    private ItemsTransferDTO getItemsFromCatalog(String uri) {
+        return restTemplate.getForObject(uri, ItemsTransferDTO.class);
+
     }
 
 
-    private AvailabilityDTO getAvailabilityFromInventory(List<String> iDs) throws ExecutionException, InterruptedException {
-        return webClientBuilder.build()
-                .post()
-                .uri("https://inventory-service/availability")
-                .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
-                .body(Mono.just(new ListOfIDsDTO(iDs)), ListOfIDsDTO.class)
-                .retrieve()
-                .bodyToMono(AvailabilityDTO.class)
-                .toFuture()
-                .get();
+    private AvailabilityDTO getAvailabilityFromInventory(List<String> iDs) {
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
+
+        Map<String, Object> map = Map.of("iDs", new ListOfIDsDTO(iDs));
+
+        HttpEntity<Map<String, Object>> entity = new HttpEntity<>(map, headers);
+
+        return restTemplate.postForObject("http://inventory-service/availability", entity, AvailabilityDTO.class);
     }
 }
