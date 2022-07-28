@@ -23,3 +23,4 @@ public class DiscoveryServerApplication {
 //   and ‘circuitBreaker.sleepWindowInMilliseconds’ to simulate circuit breaker behavior.
 
 //Use request tracing through the inter-component REST calls and the Zipkin server for monitoring request flow and latency.
+    //docker run -d -p 9411:9411 openzipkin/zipkin - to start zipkin server
