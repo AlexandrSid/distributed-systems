@@ -7,22 +7,15 @@ import org.springframework.cloud.client.loadbalancer.LoadBalanced;
 import org.springframework.cloud.netflix.eureka.EnableEurekaClient;
 import org.springframework.context.annotation.Bean;
 import org.springframework.web.client.RestTemplate;
-//import org.springframework.web.reactive.function.client.WebClient;
 
-@EnableEurekaClient
 @SpringBootApplication
-//@EnableCircuitBreaker
+@EnableEurekaClient
+@EnableCircuitBreaker
 public class ProductApplication {
 
-//    @Bean
-//    @LoadBalanced
-//    public WebClient.Builder getWebClientBuilder(){
-//        return WebClient.builder();
-//    }
-
-    @Bean
     @LoadBalanced
-    public RestTemplate getRestTemplate(){
+    @Bean
+    public RestTemplate getRestTemplate() {
         return new RestTemplate();
     }
 
@@ -31,9 +24,3 @@ public class ProductApplication {
     }
 
 }
-
-//Product application: returns product data to end-clients.
-// The application exposes REST API for retrieving available products data
-// by ‘uniq_id’ and by ‘sku’ (multiple products are returned).
-// The REST service makes REST call to catalog application to get product data by ‘uniq_id’ or by ‘sku’,
-// and make a call to the inventory application to get product availability and filter out only available product before returning.
