@@ -22,7 +22,7 @@ public class Item {
     private String uniqId;
     private String sku;
     private String name_title;
-    @Column(length = 1024)
+    @Column(length = 10000)
     private String description;
     private String list_price;
     private String sale_price;
@@ -31,7 +31,7 @@ public class Item {
     private String averageproductrating;
     @Column(length = 1024)
     private String product_url;
-    @Column(length = 1024)
+    @Column(length = 2500)
     private String productimageurls;
     private String brand;
     private String totalnumberreviews;
