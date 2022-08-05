@@ -2,26 +2,26 @@ package org.asidorkin.catalogservice.repository;
 
 import lombok.SneakyThrows;
 import org.asidorkin.catalogservice.model.Item;
-import org.asidorkin.catalogservice.utilities.Utilities;
-import org.springframework.stereotype.Repository;
+import org.asidorkin.catalogservice.ItemService;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Repository
-public class RepositoryImpl implements ItemRepository {
+public class RepositoryImpl {
 
-    List<Item> itemHolder = Utilities.readCSVFile();
+    @Autowired
+    ItemService service;
+
+    List<Item> itemHolder = service.readCSVFile();
 
     @SneakyThrows
-    @Override
     public Item getItemByID(String id) {
         Thread.sleep(1000);
         return itemHolder.stream().filter(i -> i.getUniqId().equals(id)).findFirst().orElse(new Item());
     }
 
     @SneakyThrows
-    @Override
     public List<Item> getItemsBySku(String sku) {
         Thread.sleep(1500);
         return itemHolder.stream().filter(i -> i.getSku().equals(sku)).collect(Collectors.toList());

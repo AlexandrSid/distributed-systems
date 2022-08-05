@@ -1,19 +1,29 @@
-package org.asidorkin.catalogservice.utilities;
+package org.asidorkin.catalogservice;
 
 import org.asidorkin.catalogservice.model.Item;
+import org.asidorkin.catalogservice.model.Review;
+import org.asidorkin.catalogservice.repository.ItemRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
-public class Utilities {
+@Service
+public class ItemService {
 
-    final static String fileName = "catalog-service/src/main/resources/jcpenney_cut_sample.csv";
+    @Autowired
+    ItemRepository repository;
 
-    private static Item injectData(String[] format, String[] values) {
+    final String fileName = "catalog-service/src/main/resources/jcpenney_cut_sample.csv";
+
+    private Item injectData(String[] format, String[] values) {
         Item item = new Item();
         for (int i = 0; i < format.length; i++) {
             String parameter = format[i];
@@ -59,14 +69,17 @@ public class Utilities {
                     item.setTotalnumberreviews(value);
                     break;
                 case "Reviews":
-                    item.setReviews(splitReviews(value));
+                    List<Review> reviews = Arrays.stream(splitReviews(value))
+                            .map(Review::new)
+                            .collect(Collectors.toList());
+                    item.setReviews(reviews);
                     break;
             }
         }
         return item;
     }
 
-    private static String[] splitReviews(String reviews) {
+    private String[] splitReviews(String reviews) {
         if (reviews.isEmpty()) return new String[0];
 
         String[] split = reviews.split("=>\"");
@@ -77,7 +90,7 @@ public class Utilities {
         return result;
     }
 
-    public static List<Item> readCSVFile() {
+    public List<Item> readCSVFile() {
         List<Item> records = new ArrayList<>();
         try (BufferedReader br = new BufferedReader(new FileReader(fileName))) {
             String line;
@@ -95,6 +108,10 @@ public class Utilities {
             e.printStackTrace();
         }
         return records;
+    }
+
+    public void initRepo(){
+        repository.saveAll(readCSVFile());
     }
 
 }
