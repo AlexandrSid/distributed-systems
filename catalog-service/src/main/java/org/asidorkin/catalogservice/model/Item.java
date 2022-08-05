@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
@@ -21,18 +22,21 @@ public class Item {
     private String uniqId;
     private String sku;
     private String name_title;
+    @Column(length = 1024)
     private String description;
     private String list_price;
     private String sale_price;
     private String category;
     private String category_tree;
     private String averageproductrating;
+    @Column(length = 1024)
     private String product_url;
+    @Column(length = 1024)
     private String productimageurls;
     private String brand;
     private String totalnumberreviews;
 
-    @OneToMany(mappedBy = "item", cascade = CascadeType.ALL)
+    @OneToMany(cascade = CascadeType.ALL)
     private List<Review> reviews = new java.util.ArrayList<>();
 
 }

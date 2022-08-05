@@ -4,8 +4,10 @@ import org.asidorkin.catalogservice.model.Item;
 import org.asidorkin.catalogservice.model.Review;
 import org.asidorkin.catalogservice.repository.ItemRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.PostConstruct;
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -21,7 +23,13 @@ public class ItemService {
     @Autowired
     ItemRepository repository;
 
-    final String fileName = "catalog-service/src/main/resources/jcpenney_cut_sample.csv";
+    @PostConstruct
+    public void initRepo(){
+        repository.saveAll(readCSVFile());
+    }
+
+    @Value("${source.name}")
+    private String fileName;
 
     private Item injectData(String[] format, String[] values) {
         Item item = new Item();
@@ -108,10 +116,6 @@ public class ItemService {
             e.printStackTrace();
         }
         return records;
-    }
-
-    public void initRepo(){
-        repository.saveAll(readCSVFile());
     }
 
 }
