@@ -1,11 +1,12 @@
 package org.asidorkin.product;
 
 import org.asidorkin.product.dto.AvailabilityDTO;
+import org.asidorkin.product.dto.ListOfIDsDTO;
 import org.asidorkin.product.dto.ProductResponseDTO;
 import org.asidorkin.product.dto.ItemsTransferDTO;
 import org.asidorkin.product.model.Item;
-import org.asidorkin.product.services.CatalogService;
-import org.asidorkin.product.services.InventoryService;
+import org.asidorkin.product.services.FeignToCatalogService;
+import org.asidorkin.product.services.FeignToInventoryService;
 import org.asidorkin.product.services.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -34,9 +35,9 @@ public class ProductController {
     @Autowired
     ProductService productService;
     @Autowired
-    CatalogService catalogService;
+    FeignToCatalogService catalogService;
     @Autowired
-    InventoryService inventoryService;
+    FeignToInventoryService inventoryService;
 
     //    @HystrixCommand(fallbackMethod = "getFallback"
 //            , commandProperties = {@HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds", value = "4000")}
@@ -45,14 +46,14 @@ public class ProductController {
     @RequestMapping(value = "/id/{id}", method = RequestMethod.GET)
     public ProductResponseDTO availableById(@PathVariable String id) {
 
-        ItemsTransferDTO requestedByIdItem = catalogService.getItemsFromCatalog(requestAddress4Id + id);
-
+        ItemsTransferDTO requestedByIdItem =
+                catalogService.getByUniqId(id);
         if (requestedByIdItem.getItems().get(0).getUniqId() == null) {
             return productService.EmptyItemAvailabilityDTO;
         }
 
-        AvailabilityDTO idToAvailableValues = inventoryService.getAvailabilityFromInventory(List.of(id));
-
+        AvailabilityDTO idToAvailableValues =
+                inventoryService.getAvailability(new ListOfIDsDTO(List.of(id)));
         return productService.constructAndReturnProductResponseDTO(requestedByIdItem, idToAvailableValues, filterZeros);
     }
 
@@ -63,7 +64,8 @@ public class ProductController {
     @RequestMapping(value = "/sku/{sku}", method = RequestMethod.GET)
     public ProductResponseDTO availableBySku(@PathVariable String sku) {
 
-        ItemsTransferDTO requestedByIdItem = catalogService.getItemsFromCatalog(requestAddress4Sku + sku);
+        ItemsTransferDTO requestedByIdItem =
+                catalogService.getBySku(sku);
         //extract list of uniq ids of returned records to further use it in request items availability.
         List<String> iDs = requestedByIdItem.getItems().stream().map(Item::getUniqId).collect(Collectors.toList());
 
@@ -71,8 +73,8 @@ public class ProductController {
             return productService.EmptyItemAvailabilityDTO;
         }
 
-        AvailabilityDTO idToAvailableValues = inventoryService.getAvailabilityFromInventory(iDs);
-
+        AvailabilityDTO idToAvailableValues =
+                inventoryService.getAvailability(new ListOfIDsDTO(iDs));
         return productService.constructAndReturnProductResponseDTO(requestedByIdItem, idToAvailableValues, filterZeros);
 
     }
