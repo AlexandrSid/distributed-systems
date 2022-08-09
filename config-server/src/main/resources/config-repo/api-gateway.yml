@@ -9,15 +9,21 @@ spring:
         locator:
           enabled: true
           lower-case-service-id: true
+
       routes:
+#        - id: catalog-service
+#          uri: lb://catalog-sercie
+#          predicates:
+#            - Path=/api/id/**
+#            - Path=/api/sku/**
+#
+#        - id: inventroy-service
+#          uri: lb://inventory-service
+#          predicates:
+#            - Path=/api/availability`
 
-         -id: catalog-service
-         uri: lb://catalog-sercie
-        predicates:
-          - Path=/api/id/*
-          - Path=/api/sku/*
-
-         -id: inventroy-service
-          uri: lb://inventory-service
-         predicates:
-          - Path=/api/availability`
+        - id: product-service
+          uri: lb://product-service
+          predicates:
+            - Path=/id/**
+            - Path=/sku/**
