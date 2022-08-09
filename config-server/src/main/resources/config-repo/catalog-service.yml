@@ -7,5 +7,5 @@ source:
 #  name: catalog-service/src/main/resources/jcpenney_com-ecommerce_sample.csv
 
 sleep:
-  id: 500
-  sku: 750
+  id: 50
+  sku: 75

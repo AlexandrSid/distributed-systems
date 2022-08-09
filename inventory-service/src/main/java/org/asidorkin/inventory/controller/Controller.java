@@ -30,7 +30,7 @@ public class Controller {
     @RequestMapping(method = RequestMethod.POST)
     public AvailabilityDTO getAvailability(@RequestBody ListOfIDsDTO values)
     {
-        Thread.sleep(300);
+//        Thread.sleep(300);
         return new AvailabilityDTO(storage.getAvailability(values.getListOfIDs()));
     }
 

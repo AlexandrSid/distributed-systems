@@ -17,8 +17,8 @@ public class InventoryService {
     @Value("${request.address.availability}")
     String requestAddress4Availability;
 
-    @Autowired
-    RestTemplate restTemplate;
+//    @Autowired
+//    RestTemplate restTemplate;
 
 //    @HystrixCommand(fallbackMethod = "getFallbackInventoryRequest", commandProperties = {
 //            @HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds", value = "1000"),
@@ -31,9 +31,9 @@ public class InventoryService {
 //                    @HystrixProperty(name = "coreSize", value = "10"),
 //                    @HystrixProperty(name = "maxQueueSize", value = "5")
 //            })
-    public AvailabilityDTO getAvailabilityFromInventory(List<String> iDs) {
-        return restTemplate.postForObject(requestAddress4Availability, new ListOfIDsDTO(iDs), AvailabilityDTO.class);
-    }
+//    public AvailabilityDTO getAvailabilityFromInventory(List<String> iDs) {
+//        return restTemplate.postForObject(requestAddress4Availability, new ListOfIDsDTO(iDs), AvailabilityDTO.class);
+//    }
 
     public AvailabilityDTO getFallbackInventoryRequest(List<String> iDs) {
 //        return null;

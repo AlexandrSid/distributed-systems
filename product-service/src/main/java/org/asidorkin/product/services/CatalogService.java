@@ -10,8 +10,8 @@ import org.springframework.web.server.ResponseStatusException;
 @Service
 public class CatalogService {
 
-    @Autowired
-    RestTemplate restTemplate;
+//    @Autowired
+//    RestTemplate restTemplate;
 
 //    @HystrixCommand(fallbackMethod = "getFallbackCatalogRequest", commandProperties = {
 //            @HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds", value = "2000"),
@@ -25,9 +25,9 @@ public class CatalogService {
 //                    @HystrixProperty(name = "maxQueueSize", value = "5")
 //            })
 
-    public ItemsTransferDTO getItemsFromCatalog(String uri) {
-        return restTemplate.getForObject(uri, ItemsTransferDTO.class);
-    }
+//    public ItemsTransferDTO getItemsFromCatalog(String uri) {
+//        return restTemplate.getForObject(uri, ItemsTransferDTO.class);
+//    }
 
     public ItemsTransferDTO getFallbackCatalogRequest(String uri) {
 //        return null;
