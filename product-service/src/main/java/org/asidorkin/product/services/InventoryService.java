@@ -11,14 +11,12 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
+//TODO remove class
 @Service
 public class InventoryService {
-
     @Value("${request.address.availability}")
     String requestAddress4Availability;
 
-//    @Autowired
-//    RestTemplate restTemplate;
 
 //    @HystrixCommand(fallbackMethod = "getFallbackInventoryRequest", commandProperties = {
 //            @HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds", value = "1000"),

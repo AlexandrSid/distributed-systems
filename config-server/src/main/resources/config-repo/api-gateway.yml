@@ -21,7 +21,7 @@ spring:
           predicates:
             - Path=/api/availability
 
-        - id: product-service
+        - id: blah-blah #was "product-service" I thought it means something
           uri: http://product-service
           predicates:
             - Path=/product-service/**
