@@ -23,7 +23,6 @@ spring:
         #            - Path=/api/availability`
 
         - id: product-service
-          uri: lb://product-service
+          uri: http://product-service
           predicates:
-            - Path=api/id/**
-            - Path=api/sku/**
+            - Path=/product/**
