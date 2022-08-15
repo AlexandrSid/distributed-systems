@@ -1,9 +1,11 @@
 package org.asidorkin.product;
 
+import io.github.resilience4j.bulkhead.annotation.Bulkhead;
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import org.asidorkin.product.dto.AvailabilityDTO;
+import org.asidorkin.product.dto.ItemsTransferDTO;
 import org.asidorkin.product.dto.ListOfIDsDTO;
 import org.asidorkin.product.dto.ProductResponseDTO;
-import org.asidorkin.product.dto.ItemsTransferDTO;
 import org.asidorkin.product.model.Item;
 import org.asidorkin.product.services.FeignToCatalogService;
 import org.asidorkin.product.services.FeignToInventoryService;
@@ -39,11 +41,8 @@ public class ProductController {
     @Autowired
     FeignToInventoryService inventoryService;
 
-    //    @HystrixCommand(fallbackMethod = "getFallback"
-//            , commandProperties = {@HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds", value = "4000")}
-////            , ignoreExceptions = {HystrixRuntimeException.class, HystrixTimeoutException.class}
-//    )
     @RequestMapping(value = "/id/{id}", method = RequestMethod.GET)
+    @CircuitBreaker(name = "default", fallbackMethod = "getFallback" )
     public ProductResponseDTO availableById(@PathVariable String id) {
 
         ItemsTransferDTO requestedByIdItem =
@@ -57,11 +56,8 @@ public class ProductController {
         return productService.constructAndReturnProductResponseDTO(requestedByIdItem, idToAvailableValues, filterZeros);
     }
 
-    //    @HystrixCommand(fallbackMethod = "getFallback"
-//            , commandProperties = {@HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds", value = "4000")}
-////            , ignoreExceptions = {HystrixRuntimeException.class, HystrixTimeoutException.class}
-//    )
     @RequestMapping(value = "/sku/{sku}", method = RequestMethod.GET)
+    @CircuitBreaker(name = "default", fallbackMethod = "getFallback" )
     public ProductResponseDTO availableBySku(@PathVariable String sku) {
 
         ItemsTransferDTO requestedByIdItem =
