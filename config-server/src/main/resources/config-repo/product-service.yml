@@ -9,21 +9,3 @@ request:
     sku: http://catalog-service/sku/
     id: http://catalog-service/id/
     availability: http://inventory-service/availability
-
-resilience4j:
-  circuitbreaker:
-    configs:
-      default:
-        registerHealthIndicator: true
-        minimumNumberOfCalls: 5
-        permittedNumberOfCallsInHalfOpenState: 3
-        automaticTransitionFromOpenToHalfOpenEnabled: true
-        waitDurationInOpenState: 5s
-        failureRateThreshold: 50
-        eventConsumerBufferSize: 10
-#        ignoreExceptions:
-#          - java.lang.RuntimeException
-#
-#    instances:
-#      backendA:
-#        baseConfig: default
