@@ -3,8 +3,10 @@ server:
 
 # hot change may not be possible, catalog-service restart needed
 source:
-  name: catalog-service/src/main/resources/jcpenney_cut_sample.csv
-#  name: catalog-service/src/main/resources/jcpenney_com-ecommerce_sample.csv
+  #  name: catalog-service/src/main/resources/jcpenney_cut_sample.csv
+  #  name: catalog-service/src/main/resources/jcpenney_com-ecommerce_sample.csv
+  name: jcpenney_cut_sample.csv
+#    name: jcpenney_com-ecommerce_sample.csv
 
 sleep:
   id: 50

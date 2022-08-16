@@ -23,7 +23,7 @@ public class ItemService {
     @Autowired
     ItemRepository repository;
 
-    @PostConstruct
+//    @PostConstruct
     public void initRepo(){
         repository.saveAll(readCSVFile());
     }
