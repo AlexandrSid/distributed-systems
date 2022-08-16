@@ -15,7 +15,7 @@ public class BatchJobRunner implements CommandLineRunner {
     private JobLauncher jobLauncher;
 
     @Autowired
-    private Job jobA;
+    private Job readCSVtoH2;
 
     @Override
     public void run(String... args) throws Exception {
@@ -25,7 +25,7 @@ public class BatchJobRunner implements CommandLineRunner {
                         .addLong("time", System.currentTimeMillis())
                         .toJobParameters();
 
-        jobLauncher.run(jobA, jobParameters);
+        jobLauncher.run(readCSVtoH2, jobParameters);
         System.out.println("JOB Execution completed!");
     }
 }

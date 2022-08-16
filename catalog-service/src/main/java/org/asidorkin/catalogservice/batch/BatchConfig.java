@@ -46,7 +46,6 @@ public class BatchConfig {
             "Reviews"
     };
 
-    //Reader class Object
     @Bean
     public FlatFileItemReader<Item> reader() {
 
@@ -63,11 +62,9 @@ public class BatchConfig {
 
     }
 
-    //Autowire InvoiceRepository
     @Autowired
     ItemRepository repository;
 
-    //Writer class Object
     @Bean
     public ItemWriter<Item> writer() {
         // return new InvoiceItemWriter(); // Using lambda expression code instead of a separate implementation
@@ -77,7 +74,6 @@ public class BatchConfig {
         };
     }
 
-    //Processor class Object
     @Bean
     public ItemProcessor<Item, Item> processor() {
         // return new InvoiceProcessor(); // Using lambda expression code instead of a separate implementation
@@ -87,17 +83,14 @@ public class BatchConfig {
         };
     }
 
-    //Listener class Object
     @Bean
     public JobExecutionListener listener() {
         return new InvoiceListener();
     }
 
-    //Autowire StepBuilderFactory
     @Autowired
     private StepBuilderFactory stepBuilderFactory;
 
-    //Step Object
     @Bean
     public Step stepA() {
         return stepBuilderFactory.get("stepA")
@@ -109,125 +102,18 @@ public class BatchConfig {
                 ;
     }
 
-    //Autowire JobBuilderFactory
     @Autowired
     private JobBuilderFactory jobBuilderFactory;
 
-    //Job Object
     @Bean
-    public Job jobA() {
+    public Job job() {
         return jobBuilderFactory.get("jobA")
                 .incrementer(new RunIdIncrementer())
                 .listener(listener())
                 .start(stepA())
-                // .next(stepB())
-                // .next(stepC())
                 .build()
                 ;
     }
 
 }
 
-
-//
-//@Configuration
-//@EnableBatchProcessing
-//public class BatchConfig {
-//
-//    @Autowired
-//    ItemRepository repository;
-//
-////    @PostConstruct
-////    public void initRepo() {
-////        repository.saveAll(readCSVFile());
-////    }
-//
-//    @Value("${source.name}")
-//    private String fileName;
-//
-//    private static final String[] COLUMNS = new String[]{
-//            "uniq_id",
-//            "sku",
-//            "name_title",
-//            "description",
-//            "list_price",
-//            "sale_price",
-//            "category",
-//            "category_tree",
-//            "average_product_rating",
-//            "product_url",
-//            "product_image_urls",
-//            "brand",
-//            "total_number_reviews",
-//            "Reviews"
-//    };
-//    @Autowired
-//    private JobBuilderFactory jobBuilderFactory;
-//
-//    @Autowired
-//    private StepBuilderFactory stepBuilderFactory;
-//
-//    @Bean
-//    public Job readCSVFilesJob() {
-//        return jobBuilderFactory
-//                .get("readCSVFilesJob")
-//                .incrementer(new RunIdIncrementer())
-//                .start(step1())
-//                .build();
-//    }
-//
-//    @Bean
-//    public Step step1() {
-//        return stepBuilderFactory.get("step1").<Item, Item>chunk(5)
-//                .reader(reader())
-//                .writer(writer())
-//                .build();
-//    }
-//
-//    @SuppressWarnings({ "rawtypes", "unchecked" })
-//    @Bean
-//    public FlatFileItemReader<Item> reader() {
-//        return new FlatFileItemReaderBuilder<Item>()
-//                .name("csvFileReader")
-//                .resource(new ClassPathResource(fileName))
-//                .delimited()
-//                .names(COLUMNS)
-//                .fieldSetMapper(new BeanWrapperFieldSetMapper<>() {{
-//                    setTargetType(Item.class);
-//                }})
-//                .linesToSkip(1)
-//                .build();
-////        //Create reader instance
-////        FlatFileItemReader<Item> reader = new FlatFileItemReader<>();
-////
-////        //Set input file location
-////        reader.setResource(new FileSystemResource(fileName));
-////
-////        //Set number of lines to skips. Use it if file has header rows.
-////        reader.setLinesToSkip(1);
-////
-////        //Configure how each line will be parsed and mapped to different values
-////        reader.setLineMapper(new DefaultLineMapper() {
-////            {
-////                setLineTokenizer(new DelimitedLineTokenizer() {
-////                    {
-////                        setNames(COLUMNS);
-////                    }
-////                });
-////                //Set values in Item class
-////                setFieldSetMapper(new BeanWrapperFieldSetMapper<Item>() {
-////                    {
-////                        setTargetType(Item.class);
-////                    }
-////                });
-////            }
-////        });
-////        return reader;
-//    }
-//
-//    @Bean
-//    public ConsoleItemWriter<Item> writer()
-//    {
-//        return new ConsoleItemWriter<Item>();
-//    }
-//}
